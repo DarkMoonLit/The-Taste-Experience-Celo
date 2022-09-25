@@ -12,24 +12,19 @@ contract TheTasteExperience is ERC721, ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIdCounter;
 
     struct Recipe {
-        address owner;
+        address payable owner;
         uint256 price;
-        uint256 sold;
-        mapping(address => bool) canView;
-        mapping(address => bool) canReview;
-        Feedback[] feedbacks;
-        uint ratingsCounter;
-    }
-
-    struct Feedback {
-        address reviewer;
-        uint rating;
-        string review;
+        bool forSale;
     }
 
     mapping(uint256 => Recipe) private recipes;
 
     constructor() ERC721("The Taste Experience", "TTE") {}
+
+    modifier onlyOwnerOfRecipe(uint tokenId){
+        require(msg.sender == recipes[tokenId].owner);
+        _;
+    }
 
     function createRecipe(string memory uri, uint256 _price) public {
         require(_price >= 1 ether, "Recipes can't be listed as free");
@@ -45,31 +40,24 @@ contract TheTasteExperience is ERC721, ERC721URIStorage, Ownable {
     // buys a recipe and unlock formula
     function buyRecipe(uint256 tokenId) public payable {
         require(recipes[tokenId].owner != msg.sender, "Not a customer");
-        require(!recipes[tokenId].canView[msg.sender], "Already bought recipe");
         require(
             recipes[tokenId].price == msg.value,
             "Recipe price must be matched"
         );
-        recipes[tokenId].canView[msg.sender] = true;
-        recipes[tokenId].canReview[msg.sender] = true;
-        recipes[tokenId].sold++;
         (bool success, ) = payable(recipes[tokenId].owner).call{
             value: msg.value
         }("");
         require(success, "Transfer failed");
+        _transfer(recipes[tokenId].owner, msg.sender, tokenId);
+        recipes[tokenId].owner = payable(msg.sender);
     }
 
-    // rates a recipe
-    function rateRecipe(
-        uint tokenId,
-        uint _rate,
-        string memory _review
-    ) public {
-        require(recipes[tokenId].canReview[msg.sender], "Not a valid reviewer");
-        require(_rate <= 5, "Rate must be between 0 and 5");
-        recipes[tokenId].canReview[msg.sender] = false;
-        recipes[tokenId].feedbacks.push(Feedback(msg.sender, _rate, _review));
-        recipes[tokenId].ratingsCounter += _rate;
+    function changePrice(uint256 tokenId, uint _price) public onlyOwnerOfRecipe(tokenId){
+        recipes[tokenId].price = _price;
+    }
+
+    function toggleForSale(uint256 tokenId) public onlyOwnerOfRecipe(tokenId){
+        recipes[tokenId].forSale = !recipes[tokenId].forSale;
     }
 
     function getRecipe(uint tokenId)
@@ -78,22 +66,14 @@ contract TheTasteExperience is ERC721, ERC721URIStorage, Ownable {
         returns (
             address,
             uint,
-            uint,
-            bool,
-            bool,
-            Feedback[] memory,
-            uint
+            bool
         )
     {
         Recipe storage newRecipe = recipes[tokenId];
         return (
             newRecipe.owner,
             newRecipe.price,
-            newRecipe.sold,
-            newRecipe.canView[msg.sender],
-            newRecipe.canReview[msg.sender],
-            newRecipe.feedbacks,
-            newRecipe.ratingsCounter
+            newRecipe.forSale
         );
     }
 
