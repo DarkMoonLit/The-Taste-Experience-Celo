@@ -50,7 +50,7 @@ export const createRecipe = async (
 			const added = await client.add(data);
 
 			// IPFS url for uploaded metadata
-			const url = `https://infura-ipfs.io/ipfs/${added.path}`;
+			const url = `https://tasteexperience.infura-ipfs.io/ipfs/${added.path}`;
 
 			// mint the NFT and save the IPFS url to the blockchain
 			let transaction = await minterContract.methods
@@ -72,7 +72,7 @@ export const uploadToIpfs = async (e) => {
 		const added = await client.add(file, {
 			progress: (prog) => console.log(`received: ${prog}`),
 		});
-		return `https://infura-ipfs.io/ipfs/${added.path}`;
+		return `https://tasteexperience.infura-ipfs.io/ipfs/${added.path}`;
 	} catch (error) {
 		console.log("Error uploading file: ", error);
 	}
