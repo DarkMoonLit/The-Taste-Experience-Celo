@@ -85,7 +85,7 @@ export const getRecipes = async (minterContract) => {
 		const nftsLength = await minterContract.methods
 			.getRecipesLength()
 			.call();
-		for (let i = 0; i < Number(nftsLength); i++) {
+		for (let i = 1; i < Number(nftsLength); i++) {
 			const nft = new Promise(async (resolve) => {
 				const res = await minterContract.methods.tokenURI(i).call();
 				const recipeData = await minterContract.methods
