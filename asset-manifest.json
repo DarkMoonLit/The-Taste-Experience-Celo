@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/The-Taste-Experience-Celo/static/css/main.a174681c.chunk.css",
-    "main.js": "/The-Taste-Experience-Celo/static/js/main.460f3f58.chunk.js",
-    "main.js.map": "/The-Taste-Experience-Celo/static/js/main.460f3f58.chunk.js.map",
+    "main.js": "/The-Taste-Experience-Celo/static/js/main.e91201f1.chunk.js",
+    "main.js.map": "/The-Taste-Experience-Celo/static/js/main.e91201f1.chunk.js.map",
     "runtime-main.js": "/The-Taste-Experience-Celo/static/js/runtime-main.6b11cf88.js",
     "runtime-main.js.map": "/The-Taste-Experience-Celo/static/js/runtime-main.6b11cf88.js.map",
     "static/css/2.c66ffc9d.chunk.css": "/The-Taste-Experience-Celo/static/css/2.c66ffc9d.chunk.css",
@@ -22,6 +22,6 @@
     "static/css/2.c66ffc9d.chunk.css",
     "static/js/2.b0a1d98d.chunk.js",
     "static/css/main.a174681c.chunk.css",
-    "static/js/main.460f3f58.chunk.js"
+    "static/js/main.e91201f1.chunk.js"
   ]
 }
